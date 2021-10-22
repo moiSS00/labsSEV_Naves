@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Layer.h"
+class Layer;
+
 // Todas las librerias de SDL y otras utilidades
 #include <iostream>
 #include <string>
@@ -20,6 +23,7 @@ public:
 	SDL_Window* window; // ventana
 	SDL_Renderer* renderer; // renderizador
 	bool loopActive; // Juego activo
+	Layer* gameLayer;
 };
 
 

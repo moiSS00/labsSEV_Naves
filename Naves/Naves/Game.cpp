@@ -12,6 +12,8 @@ Game::Game() {
 	// https://wiki.libsdl.org/SDL_HINT_RENDER_SCALE_QUALITY
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
+	gameLayer = new Layer(this);
+
 	loopActive = true; // bucle activo
 	loop();
 }
@@ -24,8 +26,11 @@ void Game::loop() {
 		initTick = SDL_GetTicks();
 
 		// Controles
+		gameLayer->processControls();
 		// Actualizar elementos
+		gameLayer->update();
 		// Dibujar
+		gameLayer->draw();
 
 		endTick = SDL_GetTicks();
 		differenceTick = endTick - initTick;
