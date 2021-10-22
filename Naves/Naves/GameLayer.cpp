@@ -136,8 +136,11 @@ void GameLayer::update() {
 		newEnemyTime = 110;
 
 		// Generar bombas
-		bombs.push_back(new Bomb(300, 50, game));
-		bombs.push_back(new Bomb(300, 200, game));
+		if (bombs.size() < 3) { // Para limitar el número de bombas en el mapa
+			int rXBomb = (rand() % 400) + 1;
+			int rYBomb = (rand() % 300) + 1;
+			bombs.push_back(new Bomb(rXBomb, rYBomb, game));
+		}
 	}
 
 	// Actualizar jugador
