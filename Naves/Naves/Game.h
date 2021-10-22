@@ -10,6 +10,7 @@ using namespace std;
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <map> 
 
 // Valores generales
 #define WIDTH 480
@@ -29,6 +30,8 @@ public:
 	bool scaledToMax = false;
 	float scaleLower = 1;
 	TTF_Font* font;
+	SDL_Texture* getTexture(string filename);
+	map<string, SDL_Texture*> mapTextures; // map - cache
 };
 
 
