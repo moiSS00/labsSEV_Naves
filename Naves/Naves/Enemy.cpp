@@ -21,3 +21,9 @@ void Enemy::update() {
 void Enemy::draw() {
 	animation->draw(x, y);
 }
+
+void Enemy::loseLife() {
+	if (lifes > 0) {
+		lifes--;
+	}
+}
