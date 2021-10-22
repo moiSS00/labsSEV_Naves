@@ -7,8 +7,14 @@ GameLayer::GameLayer(Game* game)
 }
 
 void GameLayer::init() {
+	points = 0;
+	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints->content = to_string(points);
+
 	player = new Player(50, 50, game);
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, game);
+	backgroundPoints = new Actor("res/icono_puntos.png",
+		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
 	enemies.clear(); // Vaciar por si reiniciamos el juego
 	projectiles.clear(); // Vaciar por si reiniciamos el juego
@@ -160,6 +166,9 @@ void GameLayer::update() {
 				if (!eInList) {
 					deleteEnemies.push_back(enemy);
 				}
+
+				points++;
+				textPoints->content = to_string(points);
 			}
 		}
 	}
@@ -192,6 +201,9 @@ void GameLayer::draw() {
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}
+
+	textPoints->draw();
+	backgroundPoints->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }

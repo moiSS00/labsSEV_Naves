@@ -28,6 +28,7 @@ public:
 	Layer* gameLayer;
 	bool scaledToMax = false;
 	float scaleLower = 1;
+	TTF_Font* font;
 };
 
 
