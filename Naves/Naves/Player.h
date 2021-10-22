@@ -11,6 +11,9 @@ public:
 	void moveX(float axis);
 	void moveY(float axis);
 	Projectile* shoot();
+
+	int shootCadence = 30;
+	int shootTime = 0;
 };
 
 
