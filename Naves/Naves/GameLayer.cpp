@@ -151,6 +151,11 @@ void GameLayer::update() {
 		enemy->update();
 	}
 
+	// Actualizar proyectiles 
+	for (auto const& projectile : projectiles) {
+		projectile->update();
+	}
+
 	// Colisiones
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
@@ -201,20 +206,41 @@ void GameLayer::update() {
 		}
 	}
 
+	// Colisiones , Player - Bomb
+	list<Bomb*> deleteBombs;
+	for (auto const& bomb : bombs) {
+		if (player->isOverlap(bomb)) {
+			deleteBombs.push_back(bomb);
+			for (auto const& enemy : enemies) {
+				if (enemy->isInRender() == true) { // Para sumar puntos de los enemigos destruidos en pantalla
+					points++; 
+					textPoints->content = to_string(points);
+				}
+				deleteEnemies.push_back(enemy);
+			}
+		}
+	}
+
+	// Fase de eliminación 
+
+	// Eliminamos enemigos
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
 	}
 	deleteEnemies.clear();
 
+	// Eliminamos proyectiles
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
 		delete delProjectile;
 	}
 	deleteProjectiles.clear();
 
-	for (auto const& projectile : projectiles) {
-		projectile->update();
+	// Eliminamos bombas
+	for (auto const& delBomb : deleteBombs) {
+		bombs.remove(delBomb);
 	}
+	deleteBombs.clear();
 
 	cout << "update GameLayer" << endl;
 }
