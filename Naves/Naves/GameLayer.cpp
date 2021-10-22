@@ -197,6 +197,7 @@ void GameLayer::update() {
 
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
+		delete delProjectile;
 	}
 	deleteProjectiles.clear();
 
