@@ -19,8 +19,10 @@ void GameLayer::init() {
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
-	enemies.clear(); // Vaciar por si reiniciamos el juego
-	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	// Vaciar por si reiniciamos el juego
+	projectiles.clear();
+	enemies.clear();
+	bombs.clear();
 }
 
 void GameLayer::processControls() {
@@ -132,10 +134,16 @@ void GameLayer::update() {
 		int rY = (rand() % (300 - 60)) + 1 + 60;
 		enemies.push_back(new Enemy(rX, rY, game));
 		newEnemyTime = 110;
+
+		// Generar bombas
+		bombs.push_back(new Bomb(300, 50, game));
+		bombs.push_back(new Bomb(300, 200, game));
 	}
 
+	// Actualizar jugador
 	player->update();
 
+	// Actualizar enemigos 
 	for (auto const& enemy : enemies) {
 		enemy->update();
 	}
@@ -209,17 +217,29 @@ void GameLayer::update() {
 }
 
 void GameLayer::draw() {
+
+	// Dibujar fondo
 	background->draw();
+	
+	// Dibujar jugador
 	player->draw();
 
+	// Dibujar enemigos
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
 
+	// Dibujar proyectiles
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}
 
+	// Dibujar bombas
+	for (auto const& bomb : bombs) {
+		bomb->draw();
+	}
+
+	// Dibujar marcador de puntos
 	textPoints->draw();
 	backgroundPoints->draw();
 
