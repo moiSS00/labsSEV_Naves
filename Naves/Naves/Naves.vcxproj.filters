@@ -30,12 +30,18 @@
     <ClCompile Include="Layer.cpp">
       <Filter>Archivos de origen\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="GameLayer.cpp">
+      <Filter>Archivos de origen\Layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
+      <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLayer.h">
       <Filter>Archivos de encabezado\Layers</Filter>
     </ClInclude>
   </ItemGroup>
