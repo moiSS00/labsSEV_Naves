@@ -19,6 +19,12 @@
     <Filter Include="Archivos de origen\Layers">
       <UniqueIdentifier>{f750afef-e35e-4fbf-8316-047852d894c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de origen\Actores">
+      <UniqueIdentifier>{58c25b2a-b6d9-4509-8d77-0d23bda98c44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Actores">
+      <UniqueIdentifier>{c9a5a836-f694-4ad3-8095-babafc4a0e51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,6 +39,9 @@
     <ClCompile Include="GameLayer.cpp">
       <Filter>Archivos de origen\Layers</Filter>
     </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Archivos de origen\Actores</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -43,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="GameLayer.h">
       <Filter>Archivos de encabezado\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Archivos de encabezado\Actores</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
