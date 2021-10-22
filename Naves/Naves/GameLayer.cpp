@@ -19,8 +19,10 @@ void GameLayer::init() {
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
 
-	enemies.clear(); // Vaciar por si reiniciamos el juego
-	projectiles.clear(); // Vaciar por si reiniciamos el juego
+	// Vaciar por si reiniciamos el juego
+	projectiles.clear();
+	enemies.clear();
+	bombs.clear();
 }
 
 void GameLayer::processControls() {
@@ -132,12 +134,26 @@ void GameLayer::update() {
 		int rY = (rand() % (300 - 60)) + 1 + 60;
 		enemies.push_back(new Enemy(rX, rY, game));
 		newEnemyTime = 110;
+
+		// Generar bombas
+		if (bombs.size() < 3) { // Para limitar el número de bombas en el mapa
+			int rXBomb = (rand() % 400) + 1;
+			int rYBomb = (rand() % 300) + 1;
+			bombs.push_back(new Bomb(rXBomb, rYBomb, game));
+		}
 	}
 
+	// Actualizar jugador
 	player->update();
 
+	// Actualizar enemigos 
 	for (auto const& enemy : enemies) {
 		enemy->update();
+	}
+
+	// Actualizar proyectiles 
+	for (auto const& projectile : projectiles) {
+		projectile->update();
 	}
 
 	// Colisiones
@@ -190,36 +206,69 @@ void GameLayer::update() {
 		}
 	}
 
+	// Colisiones , Player - Bomb
+	list<Bomb*> deleteBombs;
+	for (auto const& bomb : bombs) {
+		if (player->isOverlap(bomb)) {
+			deleteBombs.push_back(bomb);
+			for (auto const& enemy : enemies) {
+				if (enemy->isInRender() == true) { // Para sumar puntos de los enemigos destruidos en pantalla
+					points++; 
+					textPoints->content = to_string(points);
+				}
+				deleteEnemies.push_back(enemy);
+			}
+		}
+	}
+
+	// Fase de eliminación 
+
+	// Eliminamos enemigos
 	for (auto const& delEnemy : deleteEnemies) {
 		enemies.remove(delEnemy);
 	}
 	deleteEnemies.clear();
 
+	// Eliminamos proyectiles
 	for (auto const& delProjectile : deleteProjectiles) {
 		projectiles.remove(delProjectile);
 		delete delProjectile;
 	}
 	deleteProjectiles.clear();
 
-	for (auto const& projectile : projectiles) {
-		projectile->update();
+	// Eliminamos bombas
+	for (auto const& delBomb : deleteBombs) {
+		bombs.remove(delBomb);
 	}
+	deleteBombs.clear();
 
 	cout << "update GameLayer" << endl;
 }
 
 void GameLayer::draw() {
+
+	// Dibujar fondo
 	background->draw();
+	
+	// Dibujar jugador
 	player->draw();
 
+	// Dibujar enemigos
 	for (auto const& enemy : enemies) {
 		enemy->draw();
 	}
 
+	// Dibujar proyectiles
 	for (auto const& projectile : projectiles) {
 		projectile->draw();
 	}
 
+	// Dibujar bombas
+	for (auto const& bomb : bombs) {
+		bomb->draw();
+	}
+
+	// Dibujar marcador de puntos
 	textPoints->draw();
 	backgroundPoints->draw();
 
