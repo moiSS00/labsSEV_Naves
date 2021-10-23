@@ -231,6 +231,17 @@ void GameLayer::update() {
 		}
 	}
 
+	// Colisiones , Player - Coin
+	list<Coin*> deleteCoins;
+	for (auto const& coin : coins) {
+		if (player->isOverlap(coin)) {
+			deleteCoins.push_back(coin);
+			// Incrementamos puntos 
+			points++;
+			textPoints->content = to_string(points);
+		}
+	}
+
 	// Fase de eliminación 
 
 	// Eliminamos enemigos
@@ -251,6 +262,11 @@ void GameLayer::update() {
 		bombs.remove(delBomb);
 	}
 	deleteBombs.clear();
+
+	for (auto const& delCoin : deleteCoins) {
+		coins.remove(delCoin);
+	}
+	deleteCoins.clear();
 
 	cout << "update GameLayer" << endl;
 }
