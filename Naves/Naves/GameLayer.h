@@ -29,6 +29,8 @@ public:
 	// Jugadores
 	Player* player1;
 	Player* player2;
+	Text* playerText1;
+	Text* playerText2;
 
 	// Jugador 1 controles
 	bool controlShoot1 = false;

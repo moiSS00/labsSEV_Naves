@@ -11,22 +11,27 @@ void GameLayer::init() {
 	audioBackground->play();
 
 	// Jugadores
+
+	// Jugador 1
 	player1 = new Player(50, 50, game);
+	playerText1 = new Text("P1:", WIDTH * 0.05, HEIGHT * 0.04, game);
+	backgroundLifes1 = new Actor("res/corazon.png",
+		WIDTH * 0.15, HEIGHT * 0.05, 44, 36, game);
+	textLifes1 = new Text("3", WIDTH * 0.22, HEIGHT * 0.04, game);
+
+	// Jugador 2
 	player2 = new Player(50, 200, game);
+	playerText2 = new Text("P2:", WIDTH * 0.30, HEIGHT * 0.04, game);
+	backgroundLifes2 = new Actor("res/corazon.png", WIDTH * 0.40, HEIGHT * 0.05, 44, 36, game);
+	textLifes2 = new Text("3", WIDTH * 0.47, HEIGHT * 0.04, game);
 
-	// Texto puntos
-	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
-	textPoints->content = to_string(points);
-
-	// Texto vidas
-	textLifes1 = new Text("3", WIDTH * 0.72, HEIGHT * 0.04, game);
-
+	// Compartido
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
-	backgroundLifes1 = new Actor("res/corazon.png",
-		WIDTH * 0.65, HEIGHT * 0.05, 44, 36, game);
+	points = 0;
+	textPoints = new Text("Hola", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints->content = to_string(points);
 
 	// Vaciar por si reiniciamos el juego
 	projectiles.clear();
@@ -260,6 +265,14 @@ void GameLayer::update() {
 				return;
 			}
 		}
+		if (player2->isOverlap(enemy)) {
+			player2->loseLife();
+			textLifes2->content = to_string(player2->lifes);
+			if (player2->lifes <= 0) {
+				init();
+				return;
+			}
+		}
 	}
 
 	// Colisiones , Enemy - Projectile
@@ -309,7 +322,7 @@ void GameLayer::update() {
 	// Colisiones , Player - Bomb
 	list<Bomb*> deleteBombs;
 	for (auto const& bomb : bombs) {
-		if (player1->isOverlap(bomb)) {
+		if (player1->isOverlap(bomb) || player2->isOverlap(bomb)) {
 			deleteBombs.push_back(bomb);
 			for (auto const& enemy : enemies) {
 				if (enemy->isInRender() == true) { // Para sumar puntos de los enemigos destruidos en pantalla
@@ -324,7 +337,7 @@ void GameLayer::update() {
 	// Colisiones , Player - Coin
 	list<Coin*> deleteCoins;
 	for (auto const& coin : coins) {
-		if (player1->isOverlap(coin)) {
+		if (player1->isOverlap(coin) || player2->isOverlap(coin)) {
 			deleteCoins.push_back(coin);
 			// Incrementamos puntos 
 			points++;
@@ -394,9 +407,17 @@ void GameLayer::draw() {
 	textPoints->draw();
 	backgroundPoints->draw();
 
-	// Dibujar marcador de vidas
+	// Dibujar marcador de vidas jugador 1
 	textLifes1->draw();
 	backgroundLifes1->draw();
+
+	// Dibujar marcador de vidas jugador 2
+	textLifes2->draw();
+	backgroundLifes2->draw();
+
+	// Textos informativos 
+	playerText1->draw(); 
+	playerText2->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
