@@ -6,6 +6,9 @@ Player::Player(float x, float y, Game* game)
 }
 
 void Player::update() {
+	if (invulnerableTime > 0) {
+		invulnerableTime--;
+	}
 	if (shootTime > 0) {
 		shootTime--;
 	}
@@ -32,4 +35,22 @@ Projectile* Player::shoot() {
 	}
 }
 
+void Player::loseLife() {
+	if (invulnerableTime <= 0) {
+		if (lifes > 0) {
+			lifes--;
+			invulnerableTime = 100; // El jugador es invlunerable durante 100 actualizaciones 	
+		}
+	}
+}
 
+void Player::draw() {
+	if (invulnerableTime == 0) {
+		Actor::draw(); // llamar al metodo del hijo
+	}
+	else {
+		if (invulnerableTime % 10 >= 0 && invulnerableTime % 10 <= 5) {
+			Actor::draw(); // llamar al metodo del hijo
+		}
+	}
+}

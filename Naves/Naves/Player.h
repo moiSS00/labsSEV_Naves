@@ -12,10 +12,16 @@ public:
 	void moveX(float axis);
 	void moveY(float axis);
 	Projectile* shoot();
+	
+	void draw() override; // Va a sobrescribir
+	void loseLife();
 
 	int shootCadence = 30;
 	int shootTime = 0;
 	Audio* audioShoot;
+
+	int lifes = 3;
+	int invulnerableTime = 0;
 };
 
 

@@ -10,14 +10,20 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	audioBackground->play();
 
+	// Texto puntos
 	points = 0;
 	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
 	textPoints->content = to_string(points);
+
+	// Texto vidas
+	textLifes = new Text("3", WIDTH * 0.72, HEIGHT * 0.04, game);
 
 	player = new Player(50, 50, game);
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
+	backgroundLifes = new Actor("res/corazon.png",
+		WIDTH * 0.65, HEIGHT * 0.05, 44, 36, game);
 
 	// Vaciar por si reiniciamos el juego
 	projectiles.clear();
@@ -164,11 +170,15 @@ void GameLayer::update() {
 		projectile->update();
 	}
 
-	// Colisiones
+	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
 		if (player->isOverlap(enemy)) {
-			init();
-			return; // Cortar el for
+			player->loseLife();
+			textLifes->content = to_string(player->lifes);
+			if (player->lifes <= 0) {
+				init();
+				return;
+			}
 		}
 	}
 
@@ -302,6 +312,10 @@ void GameLayer::draw() {
 	// Dibujar marcador de puntos
 	textPoints->draw();
 	backgroundPoints->draw();
+
+	// Dibujar marcador de vidas
+	textLifes->draw();
+	backgroundLifes->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
