@@ -29,7 +29,9 @@ public:
 	int controlMoveX = 0;
 	int newEnemyTime = 0;
 	Actor* backgroundPoints;
+	Actor* backgroundLifes;
 	Text* textPoints;
+	Text* textLifes;
 	int points;
 	Audio* audioBackground;
 
