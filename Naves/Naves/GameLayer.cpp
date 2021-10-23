@@ -23,6 +23,7 @@ void GameLayer::init() {
 	projectiles.clear();
 	enemies.clear();
 	bombs.clear();
+	coins.clear();
 }
 
 void GameLayer::processControls() {
@@ -140,6 +141,13 @@ void GameLayer::update() {
 			int rXBomb = (rand() % 400) + 1;
 			int rYBomb = (rand() % 300) + 1;
 			bombs.push_back(new Bomb(rXBomb, rYBomb, game));
+		}
+
+		// Generar monedas
+		if (coins.size() < 3) { // Para limitar el número de monedas en el mapa
+			int rXCoin = (rand() % 400) + 1;
+			int rYCoin = (rand() % 300) + 1;
+			coins.push_back(new Coin(rXCoin, rYCoin, game));
 		}
 	}
 
@@ -268,6 +276,11 @@ void GameLayer::draw() {
 	// Dibujar bombas
 	for (auto const& bomb : bombs) {
 		bomb->draw();
+	}
+
+	// Dibujar monedas
+	for (auto const& coin : coins) {
+		coin->draw();
 	}
 
 	// Dibujar marcador de puntos

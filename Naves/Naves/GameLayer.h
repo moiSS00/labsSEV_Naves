@@ -8,6 +8,7 @@
 #include "Text.h"
 #include "Audio.h" 
 #include "Bomb.h"
+#include "Coin.h"
 
 #include <list>
 
@@ -35,6 +36,7 @@ public:
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
 	list<Bomb*> bombs;
+	list<Coin*> coins;
 };
 
 
