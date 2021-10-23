@@ -22,19 +22,40 @@ public:
 	void draw() override;
 	void keysToControls(SDL_Event event);
 
-	Player* player;
 	Background* background;
-	bool controlShoot = false;
-	int controlMoveY = 0;
-	int controlMoveX = 0;
 	int newEnemyTime = 0;
-	Actor* backgroundPoints;
-	Actor* backgroundLifes;
-	Text* textPoints;
-	Text* textLifes;
-	int points;
 	Audio* audioBackground;
 
+	// Jugadores
+	Player* player1;
+	Player* player2;
+	Text* playerText1;
+	Text* playerText2;
+
+	// Jugador 1 controles
+	bool controlShoot1 = false;
+	int controlMoveY1 = 0;
+	int controlMoveX1 = 0;
+
+	// Jugador 2 controles
+	bool controlShoot2 = false;
+	int controlMoveY2 = 0;
+	int controlMoveX2 = 0;
+
+	// Vidas jugador 1
+	Actor* backgroundLifes1;
+	Text* textLifes1;
+
+	// Vidas jugador 2
+	Actor* backgroundLifes2;
+	Text* textLifes2;
+
+	// Puntos compartidos entre jugadores
+	Actor* backgroundPoints;
+	Text* textPoints;
+	int points;
+
+	// Listas de actores
 	list<Enemy*> enemies;
 	list<Projectile*> projectiles;
 	list<Bomb*> bombs;

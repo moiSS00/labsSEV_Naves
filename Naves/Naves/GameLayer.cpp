@@ -10,20 +10,28 @@ void GameLayer::init() {
 	audioBackground = new Audio("res/musica_ambiente.mp3", true);
 	audioBackground->play();
 
-	// Texto puntos
-	points = 0;
-	textPoints = new Text("hola", WIDTH * 0.92, HEIGHT * 0.04, game);
-	textPoints->content = to_string(points);
+	// Jugadores
 
-	// Texto vidas
-	textLifes = new Text("3", WIDTH * 0.72, HEIGHT * 0.04, game);
+	// Jugador 1
+	player1 = new Player(50, 50, game);
+	playerText1 = new Text("P1:", WIDTH * 0.05, HEIGHT * 0.04, game);
+	backgroundLifes1 = new Actor("res/corazon.png",
+		WIDTH * 0.15, HEIGHT * 0.05, 44, 36, game);
+	textLifes1 = new Text("3", WIDTH * 0.22, HEIGHT * 0.04, game);
 
-	player = new Player(50, 50, game);
+	// Jugador 2
+	player2 = new Player(50, 200, game);
+	playerText2 = new Text("P2:", WIDTH * 0.30, HEIGHT * 0.04, game);
+	backgroundLifes2 = new Actor("res/corazon.png", WIDTH * 0.40, HEIGHT * 0.05, 44, 36, game);
+	textLifes2 = new Text("3", WIDTH * 0.47, HEIGHT * 0.04, game);
+
+	// Compartido
 	background = new Background("res/fondo.png", WIDTH * 0.5, HEIGHT * 0.5, -1, game);
 	backgroundPoints = new Actor("res/icono_puntos.png",
 		WIDTH * 0.85, HEIGHT * 0.05, 24, 24, game);
-	backgroundLifes = new Actor("res/corazon.png",
-		WIDTH * 0.65, HEIGHT * 0.05, 44, 36, game);
+	points = 0;
+	textPoints = new Text("Hola", WIDTH * 0.92, HEIGHT * 0.04, game);
+	textPoints->content = to_string(points);
 
 	// Vaciar por si reiniciamos el juego
 	projectiles.clear();
@@ -41,33 +49,69 @@ void GameLayer::processControls() {
 	//procesar controles
 	
 	// Disparar
-	if (controlShoot) {
-		Projectile* newProjectile = player->shoot();
+
+	// Jugador 1
+	if (controlShoot1) {
+		Projectile* newProjectile = player1->shoot();
+		if (newProjectile != NULL) {
+			projectiles.push_back(newProjectile);
+		}
+	}
+
+	// Jugador 2
+	if (controlShoot2) {
+		Projectile* newProjectile = player2->shoot();
 		if (newProjectile != NULL) {
 			projectiles.push_back(newProjectile);
 		}
 	}
 
 	// Eje X
-	if (controlMoveX > 0) {
-		player->moveX(1);
+
+	// Jugador 1
+	if (controlMoveX1> 0) {
+		player1->moveX(1);
 	}
-	else if (controlMoveX < 0) {
-		player->moveX(-1);
+	else if (controlMoveX1 < 0) {
+		player1->moveX(-1);
 	}
 	else {
-		player->moveX(0);
+		player1->moveX(0);
+	}
+
+	// Jugador 2
+	if (controlMoveX2 > 0) {
+		player2->moveX(1);
+	}
+	else if (controlMoveX2 < 0) {
+		player2->moveX(-1);
+	}
+	else {
+		player2->moveX(0);
 	}
 
 	// Eje Y
-	if (controlMoveY > 0) {
-		player->moveY(1);
+
+	// Jugador 1
+	if (controlMoveY1 > 0) {
+		player1->moveY(1);
 	}
-	else if (controlMoveY < 0) {
-		player->moveY(-1);
+	else if (controlMoveY1 < 0) {
+		player1->moveY(-1);
 	}
 	else {
-		player->moveY(0);
+		player1->moveY(0);
+	}
+
+	// Jugador 2
+	if (controlMoveY2 > 0) {
+		player2->moveY(1);
+	}
+	else if (controlMoveY2 < 0) {
+		player2->moveY(-1);
+	}
+	else {
+		player2->moveY(0);
 	}
 }
 
@@ -82,20 +126,35 @@ void GameLayer::keysToControls(SDL_Event event) {
 		case SDLK_1:
 			game->scale();
 			break;
-		case SDLK_d: // derecha
-			controlMoveX = 1;
+		case SDLK_d: // derecha 1
+			controlMoveX1 = 1;
 			break;
-		case SDLK_a: // izquierda
-			controlMoveX = -1;
+		case SDLK_a: // izquierda 1
+			controlMoveX1 = -1;
 			break;
-		case SDLK_w: // arriba
-			controlMoveY = -1;
+		case SDLK_w: // arriba 1 
+			controlMoveY1 = -1;
 			break;
-		case SDLK_s: // abajo
-			controlMoveY = 1;
+		case SDLK_s: // abajo 1
+			controlMoveY1 = 1;
 			break;
-		case SDLK_SPACE: // dispara
-			controlShoot = true;
+		case SDLK_SPACE: // dispara 1
+			controlShoot1 = true;
+			break;
+		case SDLK_RIGHT: // derecha 2
+			controlMoveX2 = 1;
+			break;
+		case SDLK_LEFT: // izquierda 2
+			controlMoveX2 = -1;
+			break;
+		case SDLK_UP: // arriba 2
+			controlMoveY2 = -1;
+			break;
+		case SDLK_DOWN: // abajo 2
+			controlMoveY2 = 1;
+			break;
+		case SDLK_RETURN: // dispara 2
+			controlShoot2 = true;
 			break;
 		}
 	}
@@ -103,28 +162,51 @@ void GameLayer::keysToControls(SDL_Event event) {
 		int code = event.key.keysym.sym;
 		// Levantada
 		switch (code) {
-		case SDLK_d: // derecha
-			if (controlMoveX == 1) {
-				controlMoveX = 0;
+		case SDLK_d: // derecha 1
+			if (controlMoveX1 == 1) {
+				controlMoveX1 = 0;
 			}
 			break;
-		case SDLK_a: // izquierda
-			if (controlMoveX == -1) {
-				controlMoveX = 0;
+		case SDLK_a: // izquierda 1
+			if (controlMoveX1 == -1) {
+				controlMoveX1 = 0;
 			}
 			break;
-		case SDLK_w: // arriba
-			if (controlMoveY == -1) {
-				controlMoveY = 0;
+		case SDLK_w: // arriba 1
+			if (controlMoveY1 == -1) {
+				controlMoveY1 = 0;
 			}
 			break;
-		case SDLK_s: // abajo
-			if (controlMoveY == 1) {
-				controlMoveY = 0;
+		case SDLK_s: // abajo 1
+			if (controlMoveY1 == 1) {
+				controlMoveY1 = 0;
 			}
 			break;
-		case SDLK_SPACE: // dispara
-			controlShoot = false;
+		case SDLK_SPACE: // dispara 1
+			controlShoot1 = false;
+			break;
+		case SDLK_RIGHT: // derecha 2
+			if (controlMoveX2 == 1) {
+				controlMoveX2 = 0;
+			}
+			break;
+		case SDLK_LEFT: // izquierda 2
+			if (controlMoveX2 == -1) {
+				controlMoveX2 = 0;
+			}
+			break;
+		case SDLK_UP: // arriba 2
+			if (controlMoveY2 == -1) {
+				controlMoveY2 = 0;
+			}
+			break;
+		case SDLK_DOWN: // abajo 2
+			if (controlMoveY2 == 1) {
+				controlMoveY2 = 0;
+			}
+			break;
+		case SDLK_RETURN: // dispara 2
+			controlShoot2 = false;
 			break;
 		}
 	}
@@ -132,7 +214,13 @@ void GameLayer::keysToControls(SDL_Event event) {
 
 
 void GameLayer::update() {
+
+	// Actualizar fondo
 	background->update();
+
+	// Actualizar jugadores
+	player1->update();
+	player2->update();
 
 	// Generar enemigos
 	newEnemyTime--;
@@ -157,9 +245,6 @@ void GameLayer::update() {
 		}
 	}
 
-	// Actualizar jugador
-	player->update();
-
 	// Actualizar enemigos 
 	for (auto const& enemy : enemies) {
 		enemy->update();
@@ -172,10 +257,18 @@ void GameLayer::update() {
 
 	// Colisiones, Player - Enemy
 	for (auto const& enemy : enemies) {
-		if (player->isOverlap(enemy)) {
-			player->loseLife();
-			textLifes->content = to_string(player->lifes);
-			if (player->lifes <= 0) {
+		if (player1->isOverlap(enemy)) {
+			player1->loseLife();
+			textLifes1->content = to_string(player1->lifes);
+			if (player1->lifes <= 0) {
+				init();
+				return;
+			}
+		}
+		if (player2->isOverlap(enemy)) {
+			player2->loseLife();
+			textLifes2->content = to_string(player2->lifes);
+			if (player2->lifes <= 0) {
 				init();
 				return;
 			}
@@ -229,7 +322,7 @@ void GameLayer::update() {
 	// Colisiones , Player - Bomb
 	list<Bomb*> deleteBombs;
 	for (auto const& bomb : bombs) {
-		if (player->isOverlap(bomb)) {
+		if (player1->isOverlap(bomb) || player2->isOverlap(bomb)) {
 			deleteBombs.push_back(bomb);
 			for (auto const& enemy : enemies) {
 				if (enemy->isInRender() == true) { // Para sumar puntos de los enemigos destruidos en pantalla
@@ -244,7 +337,7 @@ void GameLayer::update() {
 	// Colisiones , Player - Coin
 	list<Coin*> deleteCoins;
 	for (auto const& coin : coins) {
-		if (player->isOverlap(coin)) {
+		if (player1->isOverlap(coin) || player2->isOverlap(coin)) {
 			deleteCoins.push_back(coin);
 			// Incrementamos puntos 
 			points++;
@@ -286,8 +379,9 @@ void GameLayer::draw() {
 	// Dibujar fondo
 	background->draw();
 	
-	// Dibujar jugador
-	player->draw();
+	// Dibujar jugadores
+	player1->draw();
+	player2->draw();
 
 	// Dibujar enemigos
 	for (auto const& enemy : enemies) {
@@ -313,9 +407,17 @@ void GameLayer::draw() {
 	textPoints->draw();
 	backgroundPoints->draw();
 
-	// Dibujar marcador de vidas
-	textLifes->draw();
-	backgroundLifes->draw();
+	// Dibujar marcador de vidas jugador 1
+	textLifes1->draw();
+	backgroundLifes1->draw();
+
+	// Dibujar marcador de vidas jugador 2
+	textLifes2->draw();
+	backgroundLifes2->draw();
+
+	// Textos informativos 
+	playerText1->draw(); 
+	playerText2->draw();
 
 	SDL_RenderPresent(game->renderer); // Renderiza
 }
