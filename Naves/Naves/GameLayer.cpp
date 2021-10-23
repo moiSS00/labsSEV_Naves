@@ -23,6 +23,7 @@ void GameLayer::init() {
 	projectiles.clear();
 	enemies.clear();
 	bombs.clear();
+	coins.clear();
 }
 
 void GameLayer::processControls() {
@@ -141,6 +142,13 @@ void GameLayer::update() {
 			int rYBomb = (rand() % 300) + 1;
 			bombs.push_back(new Bomb(rXBomb, rYBomb, game));
 		}
+
+		// Generar monedas
+		if (coins.size() < 3) { // Para limitar el número de monedas en el mapa
+			int rXCoin = (rand() % 400) + 1;
+			int rYCoin = (rand() % 300) + 1;
+			coins.push_back(new Coin(rXCoin, rYCoin, game));
+		}
 	}
 
 	// Actualizar jugador
@@ -223,6 +231,17 @@ void GameLayer::update() {
 		}
 	}
 
+	// Colisiones , Player - Coin
+	list<Coin*> deleteCoins;
+	for (auto const& coin : coins) {
+		if (player->isOverlap(coin)) {
+			deleteCoins.push_back(coin);
+			// Incrementamos puntos 
+			points++;
+			textPoints->content = to_string(points);
+		}
+	}
+
 	// Fase de eliminación 
 
 	// Eliminamos enemigos
@@ -243,6 +262,11 @@ void GameLayer::update() {
 		bombs.remove(delBomb);
 	}
 	deleteBombs.clear();
+
+	for (auto const& delCoin : deleteCoins) {
+		coins.remove(delCoin);
+	}
+	deleteCoins.clear();
 
 	cout << "update GameLayer" << endl;
 }
@@ -268,6 +292,11 @@ void GameLayer::draw() {
 	// Dibujar bombas
 	for (auto const& bomb : bombs) {
 		bomb->draw();
+	}
+
+	// Dibujar monedas
+	for (auto const& coin : coins) {
+		coin->draw();
 	}
 
 	// Dibujar marcador de puntos
