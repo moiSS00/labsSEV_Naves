@@ -323,13 +323,29 @@ void GameLayer::update() {
 	list<Bomb*> deleteBombs;
 	for (auto const& bomb : bombs) {
 		if (player1->isOverlap(bomb) || player2->isOverlap(bomb)) {
-			deleteBombs.push_back(bomb);
+
+			bool bInList = std::find(deleteBombs.begin(),
+				deleteBombs.end(),
+				bomb) != deleteBombs.end();
+
+			if (!bInList) {
+				deleteBombs.push_back(bomb);
+			}
+
 			for (auto const& enemy : enemies) {
 				if (enemy->isInRender() == true) { // Para sumar puntos de los enemigos destruidos en pantalla
+
+					bool eInList = std::find(deleteEnemies.begin(),
+						deleteEnemies.end(),
+						enemy) != deleteEnemies.end();
+
+					if (!eInList) {
+						deleteEnemies.push_back(enemy);
+					}
+
 					points++; 
 					textPoints->content = to_string(points);
 				}
-				deleteEnemies.push_back(enemy);
 			}
 		}
 	}
@@ -338,7 +354,15 @@ void GameLayer::update() {
 	list<Coin*> deleteCoins;
 	for (auto const& coin : coins) {
 		if (player1->isOverlap(coin) || player2->isOverlap(coin)) {
-			deleteCoins.push_back(coin);
+			
+			bool bInList = std::find(deleteCoins.begin(),
+				deleteCoins.end(),
+				coin) != deleteCoins.end();
+
+			if (!bInList) {
+				deleteCoins.push_back(coin);
+			}
+			
 			// Incrementamos puntos 
 			points++;
 			textPoints->content = to_string(points);
